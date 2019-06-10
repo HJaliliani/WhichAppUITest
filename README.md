@@ -10,17 +10,18 @@ By click on circle random number of coins (1..50) will be appear on screen and w
  
  *User can click a lot of times on circle & all the coins will be add to ui without UI performance breakdown...
  * the counter number & coin collector objects(Views) also animating with other UI elements simultaneously.
- * I implement Methods for  clean code (redude code repeating )
+ * I implement methods for  clean code (redude code repeating )
+ * Inside raw folder I put some sounds files for test
  
  **Repo contains 2 Branches:
  
  1- Master branch : Using View Animator Method
  
- -Using Kotlin Coroutines for smooth ui & performance , while adding objects and playing sounds even in low-mid Android Devices in this methos.
+ -Using Kotlin Coroutines for smooth ui & performance , while adding objects and playing sounds even in low-mid Android Devices in this method.
  
  -Delete objects immidiately after ending their animation & going out of screen due to handle performance
  
- -play coins sounds : if you wanna play sounds for every object that going out of screen must edit sound file length and choose a file with playing length in  milliseconds
+ -play coins sounds : if you wanna play sounds for every object that going out of screen must edit sound file length and choose a file with a shorter playing length in less than a seconds(in milliseconds )
  
  - show animation for counting by a Library
  ...
