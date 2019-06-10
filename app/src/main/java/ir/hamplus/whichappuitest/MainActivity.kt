@@ -21,6 +21,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        supportActionBar?.title ="View Animation method"
+
         img_circle.setOnClickListener {
             //when coins appears on screen sound
             mediaPlayer = MediaPlayer.create(this@MainActivity, R.raw.spinning_coin)
