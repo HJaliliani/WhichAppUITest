@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        supportActionBar?.title ="Object Animator method"
+        supportActionBar?.title ="Object Animator method (Branch) "
 
         img_circle.setOnClickListener {
             //when coins appears on screen sound
