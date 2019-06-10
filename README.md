@@ -12,6 +12,7 @@ By click on circle random number of coins (1..50) will be appear on screen and w
  * the counter number & coin collector objects(Views) also animating with other UI elements simultaneously.
  * I implement methods for  clean code (redude code repeating )
  * Inside raw folder I put some sounds files for test
+ * Well documented code in both branches.
  
  **Repo contains 2 Branches:
  
