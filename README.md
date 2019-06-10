@@ -43,7 +43,7 @@ By click on circle random number of coins (1..50) will be appear on screen and w
  
  -play coin sounds
  
- -delete object after exit screen
+ -delete object after exit the screen
  
  -....
  
