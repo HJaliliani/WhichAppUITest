@@ -1,25 +1,27 @@
 package ir.hamplus.whichappuitest
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import kotlinx.android.synthetic.main.activity_main.*
-import android.view.animation.AccelerateInterpolator
 import android.view.View
 import android.widget.ImageView
 import android.media.MediaPlayer
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.core.animation.doOnEnd
 
-/*  View Animation method */
+/*  Object animator method */
 class MainActivity : AppCompatActivity() {
     lateinit var mediaPlayer: MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        supportActionBar?.title ="Object Animator method"
 
         img_circle.setOnClickListener {
             //when coins appears on screen sound
@@ -31,55 +33,62 @@ class MainActivity : AppCompatActivity() {
             val randomRange = (1..50).random()
             txt_count.text = randomRange.toString()
             for (i in 1..randomRange) {
-                createViewWithAnimate(i, randomRange)
+                val newCoinImg = ImageView(this)
+                newCoinImg.id = i
+                main_layout.addView(newCoinImg)
+
+                //animate Coin Object when added to circle
+                animateViewByLibrary(newCoinImg, "bounce", 300)
+                newCoinImg.layoutParams.height = 200
+                newCoinImg.layoutParams.width = 200
+                val  rnd = (100..300).random()
+                //For add new coin imagesView objects on different locations
+                newCoinImg.x = 300F +rnd
+                newCoinImg.y = 500F +rnd
+                //Use Drawable to scaleUp & Down Smooth
+                newCoinImg.setImageResource(R.drawable.ic_coin_dollar)
+
+                translateWithScale(newCoinImg, i, randomRange)
             }
         }
     }
 
-    private fun createViewWithAnimate(i: Int, count: Int) {
-        /* Usiung Coroutines to handle how many clicks that user wants to do on circle
-         & add coins objects process operations without any lag or failure with smooth ui*/
-        GlobalScope.launch(Dispatchers.Main) {
-            val newCoinImg = ImageView(this@MainActivity)
-            newCoinImg.id = i
-            main_layout.addView(newCoinImg)
-            //animate view
-            animateViewByLibrary(newCoinImg, "bounce", 300)
-            newCoinImg.layoutParams.height = 200
-            newCoinImg.layoutParams.width = 200
-            val rnd = (100..300).random()
-            //For add new coin imagesView objects on different locations
-            newCoinImg.x = 300F + rnd
-            newCoinImg.y = 500F + rnd
-            newCoinImg.setImageResource(R.drawable.ic_coin_dollar)
-
-            translateWithScale(newCoinImg, i, count)
-        }
-    }
 
     private fun translateWithScale(imgViewCoin: View?, i: Int, count: Int) {
         if (imgViewCoin == null) {
             return
         }
-        val duration = 800L
-        val scale = 0.355f
-        // translation  object in Y axis calculation
-        val transY = imgViewCoin.top + imgViewCoin.height / 2 - scale * main_layout.height / 2
-        // translation  object in X axis calculation
-        val transX = imgViewCoin.left + imgViewCoin.width / 2 - scale * main_layout.width / 2
+        // params for animator
+        val duration = 500L
+        val scale = 0.6F
 
-        imgViewCoin.animate()
-            //  Object  animates along a Path using two properties, using  float values
-            .translationX(transX)
-            .translationY(transY)
-            /*   defines the rate of change of an animation.
-                 This allows the basic animation effects (alpha, scale, translate, rotate) to be accelerated, decelerated, repeated, etc.*/
-            .setInterpolator(AccelerateInterpolator())
-            //i *100 for make a delay before each coin start to move
-            .setStartDelay((i * 100).toLong()).duration = duration
+        // scale down  object in X axis
+        val scaleDownX = ObjectAnimator.ofFloat(imgViewCoin, "scaleX", scale).setDuration(duration  )
+        // scale down  object in Y axis
+        val scaleDownY = ObjectAnimator.ofFloat(imgViewCoin, "scaleY", scale).setDuration(duration  )
+
+        //
+        val transY = imgViewCoin.top + imgViewCoin.height - scale
+        val transX = imgViewCoin.left + imgViewCoin.width   - scale
+        /*  ObjectAnimator.ofFloat: Constructs and returns an ObjectAnimator that animates
+            coordinates along a Path using two properties using  float values*/
+        val translateX = ObjectAnimator.ofFloat(imgViewCoin, "translationX", transX).setDuration(duration  )
+        val translateY = ObjectAnimator.ofFloat(imgViewCoin, "translationY", transY).setDuration(duration )
+
+        //plays a set of Animator objects in the specified order
+        val set = AnimatorSet()
+        /*   defines the rate of change of an animation.
+            This allows the basic animation effects (alpha, scale, translate, rotate) to be accelerated, decelerated, repeated, etc.*/
+        set.interpolator = AccelerateDecelerateInterpolator()
+
+        //play all of animations to a AnimatorSet all at the same time
+        set.playTogether(scaleDownX, scaleDownY, translateX, translateY)
+        //Delay for starting play AnimatorSet on each object for going to left corner on page
+        set.startDelay  = (100 * i).toLong()
+        set.start()
 
         //After animation ended on object do some actions like play a sound & delete it
-        imgViewCoin.animate().withEndAction {
+        set.doOnEnd {
             mediaPlayer.start()
             /* Due to improve performance :
                 remove object from Main Layout  when get out of screen*/

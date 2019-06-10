@@ -37,6 +37,4 @@ dependencies {
     //animation lib
     implementation 'com.daimajia.easing:library:2.0@aar'
     implementation 'com.daimajia.androidanimations:library:2.3@aar'
-    //Kotlin Anko for Coroutines
-    implementation 'org.jetbrains.anko:anko:0.10.8'
-}
+ }
